@@ -1,5 +1,6 @@
 import os
 from Crypto.Cipher import AES
+import pickle
 
 # Pasta que contém os arquivos criptografados
 caminho_pasta = input("Digite o caminho da pasta que deseja decriptografar:")
@@ -7,10 +8,9 @@ caminho_pasta = input("Digite o caminho da pasta que deseja decriptografar:")
 # Listar todos os arquivos na pasta
 arquivos = os.listdir(caminho_pasta)
 
-# Abre o arquivo em modo de leitura ('r')
-with open('chaves', 'r') as arquivo:
-    key = arquivo.readline()
-    iv = arquivo.readline()
+# Abre o arquivo em modo de leitura de binario ('rb')
+with open("chaves", "rb") as arquivo:
+    key, iv = pickle.load(arquivo)
 
 # Inicializar o objeto AES para descriptografia
 cipher = AES.new(key, AES.MODE_CBC, iv)

@@ -2,6 +2,7 @@ import os
 import secrets
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
+import pickle
 
 # Gere uma chave AES de 256 bits (32 bytes)
 key = secrets.token_bytes(32)
@@ -9,8 +10,8 @@ key = secrets.token_bytes(32)
 # Vetor de inicialização (IV) - deve ser diferente para cada arquivo
 iv = get_random_bytes(16)
 
-with open('chaves', 'w') as arquivo:
-    arquivo.write(f"{key}\n{iv}")
+with open('chaves', 'wb') as arquivo:
+    pickle.dump((key, iv), arquivo)
 
 # Pasta que você deseja criptografar
 caminho_pasta = input("Digite o caminho da pasta que deseja criptografar:")

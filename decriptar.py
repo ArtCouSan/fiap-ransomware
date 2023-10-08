@@ -43,5 +43,5 @@ for arquivo in arquivos:
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_original:
             arquivo_original.write(dados_descriptografados)
 
-# Chama da função de jando de Aviso
+# Chamada da função de jando de Aviso
 show_encryption_message()

